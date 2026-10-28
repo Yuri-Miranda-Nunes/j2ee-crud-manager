@@ -32,6 +32,10 @@ public class TarefaServlet extends HttpServlet {
             dao.deletar(id);
             response.sendRedirect("tarefas");
             return;
+        } else if ("editar".equals(action)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            Tarefa tarefa = dao.buscarPorId(id);
+            request.setAttribute("tarefaEditando", tarefa);
         }
 
         List<Tarefa> lista = dao.listarTodas();
@@ -43,12 +47,20 @@ public class TarefaServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
+        request.setCharacterEncoding("UTF-8");
+        String idStr = request.getParameter("id");
         String titulo = request.getParameter("titulo");
         String descricao = request.getParameter("descricao");
         String status = request.getParameter("status");
 
-        Tarefa tarefa = new Tarefa(titulo, descricao, status);
-        dao.salvar(tarefa);
+        if (idStr != null && !idStr.trim().isEmpty()) {
+            int id = Integer.parseInt(idStr);
+            Tarefa tarefa = new Tarefa(id, titulo, descricao, status);
+            dao.atualizar(tarefa);
+        } else {
+            Tarefa tarefa = new Tarefa(titulo, descricao, status);
+            dao.salvar(tarefa);
+        }
 
         response.sendRedirect("tarefas");
     }

@@ -43,6 +43,41 @@ public class TarefaDAO {
         return tarefas;
     }
 
+    public Tarefa buscarPorId(int id) {
+        String sql = "SELECT * FROM tarefas WHERE id = ?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Tarefa(
+                            rs.getInt("id"),
+                            rs.getString("titulo"),
+                            rs.getString("descricao"),
+                            rs.getString("status")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar tarefa por ID: ", e);
+        }
+        return null;
+    }
+
+    public void atualizar(Tarefa tarefa) {
+        String sql = "UPDATE tarefas SET titulo = ?, descricao = ?, status = ? WHERE id = ?";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, tarefa.getTitulo());
+            stmt.setString(2, tarefa.getDescricao());
+            stmt.setString(3, tarefa.getStatus());
+            stmt.setInt(4, tarefa.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao atualizar tarefa: ", e);
+        }
+    }
+
     public void deletar(int id) {
         String sql = "DELETE FROM tarefas WHERE id = ?";
         try (Connection conn = ConnectionFactory.getConnection();
