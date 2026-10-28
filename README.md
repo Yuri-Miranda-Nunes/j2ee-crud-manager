@@ -2,6 +2,16 @@
 
 A Web application built with Java for task management, implementing the **MVC (Model-View-Controller)** pattern using **Servlets**, **JDBC**, and **MySQL**.
 
+---
+
+## 📸 Preview
+
+<p align="center">
+  <img src="./assets/preview.png" alt="Demonstração do J2EE CRUD Manager" width="800">
+</p>
+
+---
+
 ## 🚀 Tech Stack
 
 - **Language:** Java 17+
